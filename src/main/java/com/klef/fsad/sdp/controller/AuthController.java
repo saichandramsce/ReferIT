@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import com.klef.fsad.sdp.dto.LoginRequest;
 import com.klef.fsad.sdp.model.Admin;
 import com.klef.fsad.sdp.model.Employee;
@@ -24,6 +30,7 @@ import com.klef.fsad.sdp.services.ManagerService;
 @RestController
 @RequestMapping("/auth/checkapi")
 @CrossOrigin("*")
+@Tag(name = "Authentication", description = "User authentication and password management endpoints")
 public class AuthController {
 	
 	@Autowired
@@ -36,11 +43,18 @@ public class AuthController {
 	private JWTUtilizer jwtService;
 	
 	@GetMapping("/")
+	@Operation(summary = "Health Check", description = "Verify that the API server is running")
+	@ApiResponse(responseCode = "200", description = "Server is running")
 	public String home() {
 		return "Employee Management System Backend Project is Running";
 	}
 	
 	@PostMapping("/checklogin")
+	@Operation(summary = "User Login", description = "Authenticate user and generate JWT token")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "Login successful, JWT token returned"),
+		@ApiResponse(responseCode = "401", description = "Invalid credentials or account not approved")
+	})
 	public ResponseEntity<?> login(@RequestBody LoginRequest loginrequest) {
 		
 		String identifier = loginrequest.getIdentifier();

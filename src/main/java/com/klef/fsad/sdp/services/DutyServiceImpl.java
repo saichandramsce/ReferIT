@@ -3,6 +3,7 @@ package com.klef.fsad.sdp.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.klef.fsad.sdp.model.Admin;
 import com.klef.fsad.sdp.model.Duty;
@@ -13,6 +14,7 @@ import com.klef.fsad.sdp.repository.DutyRepository;
 import com.klef.fsad.sdp.repository.EmployeeRepository;
 import com.klef.fsad.sdp.repository.ManagerRepository;
 
+@Service
 public class DutyServiceImpl implements DutyService {
 
 	@Autowired
@@ -69,11 +71,19 @@ public class DutyServiceImpl implements DutyService {
 
 	@Override
 	public List<Duty> viewDutiesAssignedByManager(Long managerid) {
-		return dutyRepository.findByAssingedByManager(managerid);
+		Manager manager = managerRepository.findById(managerid).orElse(null);
+		if(manager != null) {
+			return dutyRepository.findByAssingedByManager(manager);
+		}
+		return null;
 	}
 
 	@Override
 	public List<Duty> viewDutiesAssignedByAdmin(int adminid) {
-		return dutyRepository.findByAssingedByAdmin(adminid);
+		Admin admin = adminRepository.findById(adminid).orElse(null);
+		if(admin != null) {
+			return dutyRepository.findByAssingedByAdmin(admin);
+		}
+		return null;
 	}
 }

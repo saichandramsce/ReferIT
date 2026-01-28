@@ -11,8 +11,6 @@ import com.klef.fsad.sdp.model.ResetToken;
 @Repository
 public interface ResetTokenRepository  extends JpaRepository<ResetToken, Long>{
 
-	@Query("select r from ResetToken r where r.token=?1")
-	public ResetToken FindByToken(String token);
 	
 	public Optional<ResetToken> findByToken(String token);
 	public Optional<ResetToken> findByEmail(String email);

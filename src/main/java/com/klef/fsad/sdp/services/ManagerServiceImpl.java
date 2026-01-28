@@ -72,8 +72,8 @@ public class ManagerServiceImpl implements ManagerService {
 
 	@Override
 	public String generateResetToken(String email) {
-		Optional<Manager> manager = managerRepository.FindByEmail(email);
-		if(manager.isPresent()) {
+		Manager manager = managerRepository.findByEmail(email);
+		if(manager != null) {
 			String token = UUID.randomUUID().toString();
 			
 			ResetToken rt = new ResetToken();

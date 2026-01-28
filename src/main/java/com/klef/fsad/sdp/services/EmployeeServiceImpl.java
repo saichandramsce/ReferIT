@@ -95,8 +95,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	public String generateResetToken(String email) {
-		Optional<Manager> employee = employeeRepository.FindByEmail(email);
-		if(employee.isPresent()) {
+		Employee employee = employeeRepository.findByEmail(email);
+		if(employee != null) {
 			String token = UUID.randomUUID().toString();
 			
 			ResetToken rt = new ResetToken();

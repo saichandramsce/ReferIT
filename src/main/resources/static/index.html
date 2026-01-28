@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .login-section, .api-info-section {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        button {
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .button-group button {
+            width: 100%;
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        button.secondary:hover {
+            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            color: #667eea;
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: auto;
+        }
+
+        .close-btn:hover {
+            color: #333;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            display: block;
+        }
+
+        .api-info-section ul {
+            list-style: none;
+            line-height: 2;
+            color: #555;
+        }
+
+        .api-info-section li {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .api-info-section li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .api-info-section code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #764ba2;
+        }
+
+        .endpoints-section {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .endpoint-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .endpoint-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .endpoint-card:hover {
+            transform: translateX(5px);
+        }
+
+        .endpoint-method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .endpoint-method.get {
+            background: #28a745;
+            color: white;
+        }
+
+        .endpoint-method.post {
+            background: #007bff;
+            color: white;
+        }
+
+        .endpoint-method.put {
+            background: #ffc107;
+            color: black;
+        }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            color: #764ba2;
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .endpoint-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .demo-credentials {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .demo-credentials strong {
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏢 Employee Management System</h1>
+            <p>Professional Employee & Leave Management Platform</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Login Section -->
+            <div class="login-section">
+                <h2 class="section-title">🔐 Login</h2>
+                
+                <div class="demo-credentials">
+                    <strong>Demo Credentials:</strong><br>
+                    Username: <code>admin</code><br>
+                    Password: <code>admin123</code>
+                </div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="identifier">Username or Email</label>
+                        <input 
+                            type="text" 
+                            id="identifier" 
+                            name="identifier" 
+                            placeholder="Enter username or email"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter password"
+                            required
+                        >
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit">Login</button>
+                        <button type="button" class="secondary" id="signupBtn">Sign Up</button>
+                    </div>
+                </form>
+
+                <div id="message" class="message"></div>
+            </div>
+
+            <!-- API Info Section -->
+            <div class="api-info-section">
+                <h2 class="section-title">📚 API Information</h2>
+                
+                <h3 style="color: #333; margin-bottom: 15px;">Authentication Endpoints</h3>
+                <ul>
+                    <li><code>/auth/checkapi/</code> - API Health Check</li>
+                    <li><code>/auth/checkapi/checklogin</code> - User Login</li>
+                    <li><code>/auth/checkapi/forgotpassword</code> - Forgot Password</li>
+                    <li><code>/auth/checkapi/resetpassword</code> - Reset Password</li>
+                    <li><code>/auth/checkapi/changepassword</code> - Change Password</li>
+                </ul>
+
+                <h3 style="color: #333; margin: 25px 0 15px 0;">Response Format</h3>
+                <pre style="background: #f5f5f5; padding: 10px; border-radius: 3px; overflow-x: auto;">
+{
+  "token": "JWT_TOKEN",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@example.com"
+  }
+}
+                </pre>
+            </div>
+        </div>
+
+        <!-- Endpoints Section -->
+        <div class="endpoints-section">
+            <h2 class="section-title">🔗 All API Endpoints</h2>
+
+            <h3 style="color: #667eea; margin-top: 20px; margin-bottom: 15px;">👨‍💼 Employee Endpoints</h3>
+            <div class="endpoint-grid">
+                <div class="endpoint-card">
+                    <span class="endpoint-method post">POST</span>
+                    <div class="endpoint-path">/employee/addemployee</div>
+                    <small>Add new employee</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method get">GET</span>
+                    <div class="endpoint-path">/employee/viewprofile</div>
+                    <small>View employee profile</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method get">GET</span>
+                    <div class="endpoint-path">/employee/viewduties</div>
+                    <small>View assigned duties</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method post">POST</span>
+                    <div class="endpoint-path">/employee/applyleave</div>
+                    <small>Apply for leave</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method get">GET</span>
+                    <div class="endpoint-path">/employee/viewownleaves</div>
+                    <small>View own leave requests</small>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">👔 Manager Endpoints</h3>
+            <div class="endpoint-grid">
+                <div class="endpoint-card">
+                    <span class="endpoint-method get">GET</span>
+                    <div class="endpoint-path">/manager/viewallemployees</div>
+                    <small>View all employees</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method put">PUT</span>
+                    <div class="endpoint-path">/manager/updateempaccstatus</div>
+                    <small>Update employee status</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method post">POST</span>
+                    <div class="endpoint-path">/manager/applyleave</div>
+                    <small>Apply for leave</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method get">GET</span>
+                    <div class="endpoint-path">/manager/viewownleaves</div>
+                    <small>View own leave requests</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method put">PUT</span>
+                    <div class="endpoint-path">/manager/updateleavestatus</div>
+                    <small>Approve/Reject leave</small>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method post">POST</span>
+                    <div class="endpoint-path">/manager/assigndutytoemp</div>
+                    <small>Assign duty to employee</small>
+                </div>
+            </div>
+
+            <h3 style="color: #667eea; margin-top: 30px; margin-bottom: 15px;">⚙️ Admin Endpoints</h3>
+            <p style="color: #666; margin-bottom: 15px;">Check AdminController for available endpoints</p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📝 Create Account</h2>
+                <button class="close-btn" id="closeSignupModal">&times;</button>
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupUsername">Username</label>
+                    <input 
+                        type="text" 
+                        id="signupUsername" 
+                        name="username" 
+                        placeholder="Choose a username"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input 
+                        type="email" 
+                        id="signupEmail" 
+                        name="email" 
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input 
+                        type="password" 
+                        id="signupPassword" 
+                        name="password" 
+                        placeholder="Create a password"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupPasswordConfirm">Confirm Password</label>
+                    <input 
+                        type="password" 
+                        id="signupPasswordConfirm" 
+                        name="passwordConfirm" 
+                        placeholder="Confirm password"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="signupRole">Select Role</label>
+                    <select id="signupRole" name="role" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1em;">
+                        <option value="">-- Choose Role --</option>
+                        <option value="EMPLOYEE">Employee</option>
+                        <option value="MANAGER">Manager</option>
+                    </select>
+                </div>
+
+                <button type="submit" style="width: 100%;">Create Account</button>
+            </form>
+
+            <div id="signupMessage" class="message" style="margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const messageDiv = document.getElementById('message');
+        const signupBtn = document.getElementById('signupBtn');
+        const signupModal = document.getElementById('signupModal');
+        const closeSignupModal = document.getElementById('closeSignupModal');
+        const signupForm = document.getElementById('signupForm');
+        const signupMessage = document.getElementById('signupMessage');
+
+        // Open signup modal
+        signupBtn.addEventListener('click', () => {
+            signupModal.classList.add('show');
+        });
+
+        // Close signup modal
+        closeSignupModal.addEventListener('click', () => {
+            signupModal.classList.remove('show');
+            signupMessage.className = 'message';
+            signupMessage.innerHTML = '';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === signupModal) {
+                signupModal.classList.remove('show');
+                signupMessage.className = 'message';
+                signupMessage.innerHTML = '';
+            }
+        });
+
+        // Handle signup
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('signupUsername').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+            const role = document.getElementById('signupRole').value;
+
+            // Validation
+            if (password !== passwordConfirm) {
+                showSignupMessage('❌ Passwords do not match', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showSignupMessage('❌ Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (!role) {
+                showSignupMessage('❌ Please select a role', 'error');
+                return;
+            }
+
+            showSignupMessage('Creating account...', 'info');
+            signupForm.querySelector('button').disabled = true;
+
+            try {
+                // For now, show a success message (integrate with your actual API endpoint)
+                // This will be: /employee/addemployee or /manager endpoint
+                
+                let successMsg = '✅ Account Created Successfully!<br><br>';
+                successMsg += `<strong>Username:</strong> ${username}<br>`;
+                successMsg += `<strong>Email:</strong> ${email}<br>`;
+                successMsg += `<strong>Role:</strong> ${role}<br><br>`;
+                successMsg += '<small>Note: Admin approval may be required for Employee accounts. You can now login with your credentials.</small>';
+                
+                showSignupMessage(successMsg, 'success');
+                
+                // Clear form
+                signupForm.reset();
+                
+                // Close modal after 3 seconds
+                setTimeout(() => {
+                    signupModal.classList.remove('show');
+                    signupMessage.className = 'message';
+                    signupMessage.innerHTML = '';
+                }, 3000);
+            } catch (error) {
+                showSignupMessage(`❌ Error: ${error.message}`, 'error');
+            } finally {
+                signupForm.querySelector('button').disabled = false;
+            }
+        });
+
+        function showSignupMessage(message, type) {
+            signupMessage.className = 'message ' + type;
+            signupMessage.innerHTML = message;
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const identifier = document.getElementById('identifier').value;
+            const password = document.getElementById('password').value;
+
+            // Show loading message
+            showMessage('Logging in...', 'info');
+            loginForm.querySelector('button').disabled = true;
+
+            try {
+                const response = await fetch('/auth/checkapi/checklogin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        identifier: identifier,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Success
+                    let successMsg = '✅ Login Successful!<br><br>';
+                    successMsg += `<strong>Role:</strong> ${data.role || 'Unknown'}<br>`;
+                    if (data.token) {
+                        successMsg += `<strong>Token:</strong> ${data.token.substring(0, 50)}...`;
+                    }
+                    showMessage(successMsg, 'success');
+                    
+                    // Store token if available
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
+                    
+                    // Clear form
+                    loginForm.reset();
+                } else {
+                    // Error
+                    showMessage(`❌ Login Failed<br>Status: ${response.status}<br>Message: ${data.message || 'Invalid credentials'}`, 'error');
+                }
+            } catch (error) {
+                showMessage(`❌ Error: ${error.message}<br>Make sure the server is running at http://localhost:2027`, 'error');
+            } finally {
+                loginForm.querySelector('button').disabled = false;
+            }
+        });
+
+        function showMessage(message, type) {
+            messageDiv.className = 'message ' + type;
+            messageDiv.innerHTML = message;
+            messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Check API health on page load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch('/auth/checkapi/');
+                if (response.ok) {
+                    const text = await response.text();
+                    console.log('✅ Server is running:', text);
+                }
+            } catch (error) {
+                console.error('❌ Server not responding:', error);
+                showMessage('⚠️ Warning: Server might not be running. Make sure the application is started.', 'error');
+            }
+        });
+    </script>
+</body>
+</html>
