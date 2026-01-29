@@ -17,7 +17,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JWTUtilizer {
 	
-	private final String SECRET_KEY_STRING = "eyJhcGkta2V5IjogIlY0TkpDd0V5NFltZ1JEZDUwcHFlM2hkdmJaR0dqV1VuIn0=";
+	private final String SECRET_KEY_STRING = "";
 	private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY_STRING.getBytes());
 	
 	public String generateJWTToken(String username, String role) {
